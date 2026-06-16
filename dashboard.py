@@ -46,10 +46,35 @@ class RMS:
         btn_exit.pack(side="left", expand=True, fill="x", padx=10, pady=5) #6
 
         #===content_window===
-        self.bg_img=Image.open("images/bg.png")
-        self.bg_img=self.bg_img.resize((920,350),Image.ANTIALIAS)
-        self.bg_img=ImageTk.PhotoImage(self.bg_img)
-        self.lbl=Label(self.root,image=self.bg_img).place(x=400,y=180,width=920,height=350)
+        #---background image for the dashboard with styling---
+        self.bg_img = Image.open("images/bg.png")
+        # Fixed Pillow error: changed Image.ANTIALIAS to Image.Resampling.LANCZOS
+        self.bg_img = self.bg_img.resize((920, 450), Image.Resampling.LANCZOS) 
+        self.bg_img = ImageTk.PhotoImage(self.bg_img)
+
+        self.lbl = Label(self.root, image=self.bg_img)
+        self.lbl.place(x=450, y=180, relwidth=0.6, relheight=0.5)
+
+
+        #===Update_Details===
+        #--labels for displaying the total number of courses, students, and results with styling--
+        #=== Course Dashboard Box ===
+        self.lbl_course = Label(self.root, text="Total Course\n[ 0 ]", font=("goudy old style", 20, "bold"), bd=10, bg="#092e53", fg="white", relief=RIDGE)
+        # Position is fixed at x=400, y=505, but width and height scale automatically
+        self.lbl_course.place(x=400, y=510, relwidth=0.18, relheight=0.13)
+
+        #=== Student Dashboard Box ===
+        self.lbl_student = Label(self.root, text="Total Students\n[ 0 ]", font=("goudy old style", 20, "bold"), bd=10, bg="#0676ad", fg="white", relief=RIDGE)
+        # Position is fixed at x=710, y=505, but width and height scale automatically
+        self.lbl_student.place(x=710, y=510, relwidth=0.18, relheight=0.13)
+
+        #=== Result Dashboard Box ===
+        self.lbl_result = Label(self.root, text="Total Results\n[ 0 ]", font=("goudy old style", 20, "bold"), bd=10, bg="#038074", fg="white", relief=RIDGE)
+        # Position is fixed at x=1020, y=505, but width and height scale automatically
+        self.lbl_result.place(x=1020, y=510, relwidth=0.18, relheight=0.13)
+
+
+
 
 
         #===footer===
