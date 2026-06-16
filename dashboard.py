@@ -1,11 +1,12 @@
 from tkinter import*  
 from PIL import Image,ImageTk #pip install pillow
+from course import CourseClass
 
 class RMS:
     def __init__(self,root): #function for initializing the window and its properties for the result management system
         self.root=root
         self.root.title("Result Management System")
-        self.root.geometry("1350x700+0+0")
+        self.root.geometry("1280x650+-10+0")
         self.root.config(bg="white")
 
         # ---icons---
@@ -32,7 +33,7 @@ class RMS:
 
         # --button for the menu with styling--
         #--from the menu frame, create buttons for different functionalities of the dashboard and pack them to the left side of the menu frame with padding and styling--
-        btn_course=Button(M_Frame,text="Course",font=("goudy old style",15,"bold"),bg="#007E91",fg="white",cursor="hand2")#1
+        btn_course=Button(M_Frame,text="Course",font=("goudy old style",15,"bold",),bg="#007E91",fg="white",cursor="hand2",command=self.add_course)#1
         btn_course.pack(side="left", expand=True, fill="x", padx=10, pady=5) #1
         btn_student=Button(M_Frame,text="Student",font=("goudy old style",15,"bold"),bg="#007E91",fg="white",cursor="hand2")#2
         btn_student.pack(side="left", expand=True, fill="x", padx=10, pady=5) #2
@@ -80,6 +81,10 @@ class RMS:
         #===footer===
         #footer for the dashboard with styling
         footer=Label(self.root,text="SRMS-Student Result Management System\nContact Us for any Technical Issue:987xxxx01",font=("goudy old style",12),bg="#262626",fg="white",anchor="center").pack(side=BOTTOM,fill=X)
+
+    def add_course(self):
+        self.new_win=Toplevel(self.root)
+        self.new_obj=CourseClass(self.new_win)
 
         
         
