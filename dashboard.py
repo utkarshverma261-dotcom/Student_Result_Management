@@ -3,11 +3,16 @@ from PIL import Image,ImageTk #pip install pillow
 from course import CourseClass
 
 class RMS:
+    def on_enter(e):
+        e.widget['bg'] = "#006b7a"
+
+    def on_leave(e):
+        e.widget['bg'] = "#007E91"
     def __init__(self,root): #function for initializing the window and its properties for the result management system
         self.root=root
         self.root.title("Result Management System")
         self.root.geometry("1280x650+-10+0")
-        self.root.config(bg="white")
+        self.root.config(bg="#F2F3F4")
 
         # ---icons---
         # path of the logo image for the dashboard 
@@ -31,6 +36,9 @@ class RMS:
         M_Frame=LabelFrame(self.root, text="Menus", font=("goudy old style",15,"bold"), bg="#133365",fg="white")
         M_Frame.place(x=10,y=70,relwidth=0.98,height=80)
 
+        #************************************************************************************************************************************#
+
+
         # --button for the menu with styling--
         #--from the menu frame, create buttons for different functionalities of the dashboard and pack them to the left side of the menu frame with padding and styling--
         btn_course=Button(M_Frame,text="Course",font=("goudy old style",15,"bold",),bg="#007E91",fg="white",cursor="hand2",command=self.add_course)#1
@@ -43,8 +51,12 @@ class RMS:
         btn_view.pack(side="left", expand=True, fill="x", padx=10, pady=5) #4
         btn_logout=Button(M_Frame,text="Logout",font=("goudy old style",15,"bold"),bg="#007E91",fg="white",cursor="hand2")#5
         btn_logout.pack(side="left", expand=True, fill="x", padx=10, pady=5) #5
-        btn_exit=Button(M_Frame,text="Exit",font=("goudy old style",15,"bold"),bg="#007E91",fg="white",cursor="hand2")#6
+        btn_exit=Button(M_Frame,text="Exit",font=("goudy old style",15,"bold"),bg="#9C0707",fg="white",cursor="hand2")#6
         btn_exit.pack(side="left", expand=True, fill="x", padx=10, pady=5) #6
+
+
+        #**********************************************************************************************************************#
+
 
         #===content_window===
         #---background image for the dashboard with styling---
@@ -56,6 +68,8 @@ class RMS:
         self.lbl = Label(self.root, image=self.bg_img)
         self.lbl.place(x=450, y=180, relwidth=0.6, relheight=0.5)
 
+        #*********************************************************************************************************#
+  
 
         #===Update_Details===
         #--labels for displaying the total number of courses, students, and results with styling--
