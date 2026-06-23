@@ -61,9 +61,9 @@ class CourseClass:
         self.btn_save.place(x=150,y=335,width=100,height=40)
         self.btn_update=Button(self.root,text="Update",font=("goudy old style",15,"bold"),bg="#172266",fg="white",cursor="hand2",command=self.update)
         self.btn_update.place(x=260,y=335,width=100,height=40)
-        self.btn_delete=Button(self.root,text="Delete",font=("goudy old style",15,"bold"),bg="#851107",fg="white",cursor="hand2")
+        self.btn_delete=Button(self.root,text="Delete",font=("goudy old style",15,"bold"),bg="#851107",fg="white",cursor="hand2", command=self.delete)
         self.btn_delete.place(x=370,y=335,width=100,height=40)
-        self.btn_clear=Button(self.root,text="Clear",font=("goudy old style",15,"bold"),bg="#114816",fg="white",cursor="hand2")
+        self.btn_clear=Button(self.root,text="Clear",font=("goudy old style",15,"bold"),bg="#114816",fg="white",cursor="hand2",command=self.clear)
         self.btn_clear.place(x=480,y=335,width=100,height=40)
 
 
@@ -77,7 +77,7 @@ class CourseClass:
         self.var_search=StringVar()
         lbl_search_courseName=Label(self.root,text="Search By | Course Name:",font=("goudy old style",15,"bold"),bg="white").place(x=675,y=60)
         txt_search_courseName=Entry(self.root, textvariable=self.var_search,font=("goudy old style",15,"bold"),bg="lightyellow").place(x=900,y=60, width=180)
-        btn_search=Button(self.root,text="Search",font=("goudy old style",15,"bold"),bg="#6f5115",fg="white",cursor="hand2").place(x=1095,y=60,width=90,height=28)
+        btn_search=Button(self.root,text="Search",font=("goudy old style",15,"bold"),bg="#6f5115",fg="white",cursor="hand2",command=self.search).place(x=1095,y=60,width=90,height=28)
 
         #=====Content=========
         
@@ -120,9 +120,97 @@ class CourseClass:
         self.CourseTable.bind("<ButtonRelease-1>",self.get_data)
         self.show()
 #------------------------------------------------------------------------------------------------------------------#
+# ================ DELETE RECORDS ====================#
 
+    def delete(self):
+        con = sqlite3.connect(database="rms.db")
+        cur = con.cursor()
+        
+        try:
+            print("Button Clicked")
+        
+            if self.var_course.get().strip() == "":
+                messagebox.showerror(
+                    "Error",
+                    "Course Name is required",
+                    parent=self.root
+                )
+        
+            
+            print("Checking Course")
+
+            cur.execute(
+                "SELECT * FROM course WHERE name=?",
+                (self.var_course.get(),)
+            )
+
+            row = cur.fetchone()
+
+            print("Database Result:", row)
+
+            if row == None:
+                messagebox.showerror(
+                    "Error",
+                    "Plese select course from the list first ",
+                    parent=self.root
+                )
+            else:
+                op=messagebox.askyesno("Confirm","Do you really want to delete?",parent=self.root)
+                if op==True:
+                    cur.execute("DELETE FROM course WHERE name=?",(self.var_course.get(),))
+                    con.commit()
+                    messagebox.showinfo("Delete","Course deleted Successfully",parent= self.root)
+                    self.clear()
+                    
+        except Exception as ex:
+            print("ERROR:", ex)
+
+            messagebox.showerror(
+                "Error",
+                f"Error due to {str(ex)}",
+                parent=self.root
+            )
+
+# ================ SEARCH RECORDS =================#
+    def search(self):
+        con = sqlite3.connect(database="rms.db")
+        cur = con.cursor()
+
+        try:
+            cur.execute(
+                "SELECT * FROM course WHERE name LIKE ?",
+                (f"%{self.var_search.get()}%",)
+            )
+
+            rows = cur.fetchall()
+
+            self.CourseTable.delete(*self.CourseTable.get_children())
+
+            for row in rows:
+                self.CourseTable.insert('', END, values=row)
+
+        except Exception as ex:
+            messagebox.showerror(
+                "Error",
+                f"Error due to {str(ex)}",
+                parent=self.root
+            )
+
+        finally:
+            con.close()
+# ================ CLEAR RECORD ====================#
+    def clear(self):
+        self.show()
+        self.var_course.set("")
+        self.var_duration.set("")
+        self.var_charges.set("")
+        self.var_search.set("")
+        self.txt_description.delete('1.0',END)  
+        self.txt_courseName.config(state=NORMAL)
 # ================ FETCH RECORD ====================#
     def get_data(self,ev):
+        self.txt_courseName.config(state='readonly')
+        self.txt_courseName
         r=self.CourseTable.focus()
         content=self.CourseTable.item(r)
         row=content["values"]
@@ -278,7 +366,8 @@ class CourseClass:
                         f"Error due to {str(ex)}",
                         parent=self.root
                     )
-               
+#==================== SHOW RECORDS ==================================================#
+
     def show(self):
         con = sqlite3.connect(database="rms.db")
         cur = con.cursor()
